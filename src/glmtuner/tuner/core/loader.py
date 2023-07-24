@@ -110,9 +110,9 @@ def load_model_and_tokenizer(
             
             config_kwargs["quantization_config"] = BitsAndBytesConfig(
                 load_in_4bit=True,
-                bnb_4bit_compute_dtype=model_args.compute_dtype,
-                bnb_4bit_use_double_quant=model_args.double_quantization,
-                bnb_4bit_quant_type=model_args.quantization_type
+                bnb_4bit_compute_dtype=torch.float16,#model_args.compute_dtype,
+                bnb_4bit_use_double_quant=True,#model_args.double_quantization,
+                bnb_4bit_quant_type='nf4' #model_args.quantization_type
             )
         #config_kwargs["device_map"] = {"": int(os.environ.get("LOCAL_RANK") or 0)}
         logger.info(f"************************************************************************************config_kwargs={config_kwargs}")    
@@ -145,6 +145,7 @@ def load_model_and_tokenizer(
 
     # Initialize adapters
     if model_args.quantization_bit ==4:
+        logger.info(f"********************************odel_args.quantization_bit ==4****************************************************")
         model = prepare_model_for_training(
             model,
             finetuning_args.finetuning_type,
