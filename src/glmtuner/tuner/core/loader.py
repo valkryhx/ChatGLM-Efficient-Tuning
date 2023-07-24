@@ -165,7 +165,7 @@ def load_model_and_tokenizer(
     
     if not is_trainable:
         model.requires_grad_(False) # fix all model params
-        model = model.half() # cast all params to float16 for inference
+        #model = model.half() # cast all params to float16 for inference
 
     # Quantization with the built-in method for P-Tuning v2 training or evaluation.
     # Model parameters should be cast to float16 in quantized P-Tuning setting.
