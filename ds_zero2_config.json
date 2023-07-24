@@ -45,6 +45,6 @@
         "stage3_max_reuse_distance": 1e6,
         "stage3_gather_16bit_weights_on_model_save": true
     },
-    "train_batch_size": 4 ,
-    "train_micro_batch_size_per_gpu":2
+    "train_batch_size": "auto",
+    "train_micro_batch_size_per_gpu":"auto"
 }
