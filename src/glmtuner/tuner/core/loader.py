@@ -113,7 +113,7 @@ def load_model_and_tokenizer(
                 bnb_4bit_quant_type=model_args.quantization_type
             )
         #config_kwargs["device_map"] = {"": int(os.environ.get("LOCAL_RANK") or 0)}
-        logger.info(f"config_kwargs={config_kwargs}")    
+        logger.info(f"************************************************************************************config_kwargs={config_kwargs}")    
     if model_args.checkpoint_dir is not None and finetuning_args.finetuning_type == "full":
         model_to_load = model_args.checkpoint_dir[0]
     else:
