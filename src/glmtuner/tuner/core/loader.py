@@ -103,6 +103,9 @@ def load_model_and_tokenizer(
             require_version("accelerate>=0.20.3", "To fix: pip install accelerate>=0.20.3")
             require_version("peft>=0.4.0.dev0", "To fix: pip install git+https://github.com/huggingface/peft.git")
             config_kwargs["load_in_4bit"] = True
+            config_kwargs["empty_init"] = False
+            config_kwargs["torch_dtype"] =torch.float16
+            
             config_kwargs["quantization_config"] = BitsAndBytesConfig(
                 load_in_4bit=True,
                 bnb_4bit_compute_dtype=model_args.compute_dtype,
