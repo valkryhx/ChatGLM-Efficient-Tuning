@@ -25,7 +25,14 @@ class PeftTrainer(Seq2SeqTrainer):
         super().__init__(**kwargs)
         self.finetuning_args = finetuning_args
         self._remove_log()
-
+    def save_model(self, output_dir: Optional[str] = None, _internal_call: bool = False):
+        print("99999999999999999999999999999999999999999999999999999999999999999")
+        """只保存adapter"""
+        if output_dir is None:
+            output_dir = self.args.output_dir
+        self.model.save_pretrained(output_dir)
+        torch.save(self.args, os.path.join(output_dir, "training_args.bin"))
+        
     def _remove_log(self):
         if self.is_world_process_zero() and os.path.exists(os.path.join(self.args.output_dir, "trainer_log.jsonl")):
             logger.warning("Previous log file in this folder will be deleted.")
