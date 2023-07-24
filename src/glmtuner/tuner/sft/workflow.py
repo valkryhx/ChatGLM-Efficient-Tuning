@@ -66,7 +66,7 @@ def run_sft(
         trainer.save_metrics("train", train_result.metrics)
         print(44444444444444444444444444444)
         trainer.save_state()
-        print5555555555555555555555555555555555555555555)
+        print(5555555555555555555555555555555555555555555)
         trainer.save_model()
         print(666666666666666666666666666666666666)
         if trainer.is_world_process_zero() and model_args.plot_loss:
