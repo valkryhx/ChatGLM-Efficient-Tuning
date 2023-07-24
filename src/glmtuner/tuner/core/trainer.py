@@ -18,6 +18,7 @@ logger = get_logger(__name__)
 
 class PeftTrainer(Trainer):
     def __init__(self, finetuning_args: FinetuningArguments, **kwargs):
+        print("0000000000000089898989000000000000000000000000000000000000000")
         super().__init__(**kwargs)
         self.finetuning_args = finetuning_args
         #self._remove_log()
