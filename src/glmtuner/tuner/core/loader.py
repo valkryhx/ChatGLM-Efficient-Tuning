@@ -166,7 +166,7 @@ def load_model_and_tokenizer(
         # 将model转化为peftModel 准备loRA微调
         logger.info("prepare_model_for_kbit_training...")
         model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=True)
-
+        logger.info(f"11111111111111111111111111111111111111111111111   is_trainable={is_trainable} !!!!!")
     
     if not is_trainable:
         logger.info("11111111111111111111111111111111111111111111111    model is not half !!!!!")
