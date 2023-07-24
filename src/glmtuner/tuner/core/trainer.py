@@ -2,7 +2,7 @@ import os
 import torch
 from typing import Dict, Optional
 
-from transformers import Seq2SeqTrainer
+from transformers import Seq2SeqTrainer,Trainer
 from transformers.trainer import TRAINING_ARGS_NAME
 from transformers.modeling_utils import PreTrainedModel, unwrap_model
 from peft import PeftModel
@@ -16,7 +16,7 @@ from glmtuner.hparams import FinetuningArguments
 logger = get_logger(__name__)
 
 
-class PeftTrainer(Seq2SeqTrainer):
+class PeftTrainer(Trainer):
     def __init__(self, finetuning_args: FinetuningArguments, **kwargs):
         super().__init__(**kwargs)
         self.finetuning_args = finetuning_args
