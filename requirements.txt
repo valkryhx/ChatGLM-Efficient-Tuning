@@ -1,9 +1,9 @@
-torch>=2.0.1
+torch>=2.0.0
 transformers>=4.30.2
 datasets>=2.10.0
-accelerate>=0.20.3
-bitsandbytes>=0.40.0
-peft>=0.4.0
+accelerate==0.20.3
+bitsandbytes==0.39.0
+peft==0.4.0
 trl>=0.4.7
 protobuf
 cpm-kernels
@@ -19,3 +19,4 @@ sse-starlette
 matplotlib
 loguru==0.7.0
 deepspeed==0.9.5
+cpm_kernels==1.0.11
