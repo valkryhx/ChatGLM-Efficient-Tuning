@@ -27,7 +27,9 @@ class PeftTrainer(Trainer):
         """只保存adapter"""
         if output_dir is None:
             output_dir = self.args.output_dir
+        print("111111111111111111111111111110000000000000089898989000000000000000000000000000000000000000")
         self.model.save_pretrained(output_dir)
+        print("222222222222222222222222222220000000000089898989000000000000000000000000000000000000000")
         torch.save(self.args, os.path.join(output_dir, "training_args.bin"))
 
 class PeftTrainer2(Seq2SeqTrainer):
