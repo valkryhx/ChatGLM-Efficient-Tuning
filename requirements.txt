@@ -1,8 +1,9 @@
-torch>=1.13.1
-transformers>=4.27.4
+torch>=2.0.1
+transformers>=4.30.2
 datasets>=2.10.0
 accelerate>=0.19.0
-peft>=0.3.0
+bitsandbytes>=0.40.0
+peft>=0.4.0
 trl>=0.4.7
 protobuf
 cpm-kernels
