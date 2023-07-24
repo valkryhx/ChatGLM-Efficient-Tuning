@@ -144,7 +144,7 @@ def load_model_and_tokenizer(
         raise ValueError("Please update the model files of ChatGLM2-6B.")
 
     # Initialize adapters
-    if model_args.quantization_bit !=4:
+    if model_args.quantization_bit ==4:
         model = prepare_model_for_training(
             model,
             finetuning_args.finetuning_type,
@@ -152,20 +152,24 @@ def load_model_and_tokenizer(
             output_embedding_layer_name
         ) if is_trainable else model
         model = init_adapter(model, model_args, finetuning_args, is_trainable)
-    elif model_args.quantization_bit ==4 :
         model.gradient_checkpointing_enable() 
         # note: use gradient checkpointing to save memory at the expense of slower backward pass.
         model.enable_input_require_grads()
-        # note: Enables the gradients for the input embeddings. This is useful for fine-tuning adapter weights while keeping the model weights fixed. 
-        # See https://github.com/huggingface/transformers/blob/ee88ae59940fd4b2c8fc119373143d7a1175c651/src/transformers/modeling_utils.py#L1190
-        # 将model转化为peftModel 准备loRA微调
-        logger.info("prepare_model_for_kbit_training...")
-        model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=True)
+    # elif model_args.quantization_bit ==4 :
+    #     model.gradient_checkpointing_enable() 
+    #     # note: use gradient checkpointing to save memory at the expense of slower backward pass.
+    #     model.enable_input_require_grads()
+    #     # note: Enables the gradients for the input embeddings. This is useful for fine-tuning adapter weights while keeping the model weights fixed. 
+    #     # See https://github.com/huggingface/transformers/blob/ee88ae59940fd4b2c8fc119373143d7a1175c651/src/transformers/modeling_utils.py#L1190
+    #     # 将model转化为peftModel 准备loRA微调
+    #     logger.info("prepare_model_for_kbit_training...")
+    #     model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=True)
 
     
     if not is_trainable:
+        logger.info("model is not half !!!!!")
         model.requires_grad_(False) # fix all model params
-        #model = model.half() # cast all params to float16 for inference
+        model = model.half() # cast all params to float16 for inference
 
     # Quantization with the built-in method for P-Tuning v2 training or evaluation.
     # Model parameters should be cast to float16 in quantized P-Tuning setting.
@@ -199,5 +203,5 @@ def load_model_and_tokenizer(
             assert load_valuehead_params(model, model_args.reward_model), "Reward model is not correctly loaded."
 
     print_trainable_params(model)
-
+    
     return model, tokenizer
