@@ -31,7 +31,7 @@ class PeftTrainer(Seq2SeqTrainer):
             logger.warning("Previous log file in this folder will be deleted.")
             os.remove(os.path.join(self.args.output_dir, "trainer_log.jsonl"))
 
-    def _save(self, output_dir: Optional[str] = None, state_dict: Optional[Dict[str, torch.Tensor]] = None) -> None:
+    def _save2(self, output_dir: Optional[str] = None, state_dict: Optional[Dict[str, torch.Tensor]] = None) -> None:
         r"""
         Saves trainable parameters as model checkpoint.
 
