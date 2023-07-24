@@ -19,7 +19,9 @@ from glmtuner.extras.misc import prepare_model_for_training, print_trainable_par
 from glmtuner.extras.save_and_load import load_valuehead_params
 from glmtuner.hparams import ModelArguments, FinetuningArguments
 from glmtuner.tuner.core.adapter import init_adapter
-
+from peft import (
+     prepare_model_for_kbit_training
+)
 
 logger = get_logger(__name__)
 
