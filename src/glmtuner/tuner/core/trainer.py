@@ -20,7 +20,7 @@ class PeftTrainer(Seq2SeqTrainer):
     def __init__(self, finetuning_args: FinetuningArguments, **kwargs):
         super().__init__(**kwargs)
         self.finetuning_args = finetuning_args
-        self._remove_log()
+        #self._remove_log()
     def save_model(self, output_dir: Optional[str] = None, _internal_call: bool = False):
         print("89898989000000000000000000000000000000000000000")
         """只保存adapter"""
