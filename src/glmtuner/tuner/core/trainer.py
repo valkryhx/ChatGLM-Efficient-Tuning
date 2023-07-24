@@ -17,6 +17,16 @@ logger = get_logger(__name__)
 
 
 class PeftTrainer(Seq2SeqTrainer):
+
+    def save_model(self, output_dir: Optional[str] = None, _internal_call: bool = False):
+        print("89898989000000000000000000000000000000000000000")
+        """只保存adapter"""
+        if output_dir is None:
+            output_dir = self.args.output_dir
+        self.model.save_pretrained(output_dir)
+        torch.save(self.args, os.path.join(output_dir, "training_args.bin"))
+
+class PeftTrainer2(Seq2SeqTrainer):
     r"""
     Inherits Seq2SeqTrainer to support parameter-efficient checkpoints.
     """
