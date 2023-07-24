@@ -58,12 +58,19 @@ def run_sft(
 
     # Training
     if training_args.do_train:
+        print(1111111111111111111111111111111111)
         train_result = trainer.train()
+        print(222222222222222222222222222222222)
         trainer.log_metrics("train", train_result.metrics)
+        print(333333333333333333333333)
         trainer.save_metrics("train", train_result.metrics)
+        print(44444444444444444444444444444)
         trainer.save_state()
+        print5555555555555555555555555555555555555555555)
         trainer.save_model()
+        print(666666666666666666666666666666666666)
         if trainer.is_world_process_zero() and model_args.plot_loss:
+            print(777777777777777777777777777777777777777777)
             plot_loss(training_args.output_dir, keys=["loss", "eval_loss"])
 
     # Evaluation
