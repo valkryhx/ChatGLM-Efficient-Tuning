@@ -31,6 +31,7 @@ class PeftTrainer(Trainer):
         self.model.save_pretrained(output_dir)
         print("222222222222222222222222222220000000000089898989000000000000000000000000000000000000000")
         torch.save(self.args, os.path.join(output_dir, "training_args.bin"))
+        print("2222333333333333333333333333333333333300000000089898989000000000000000000000000000000000000000")
 
 class PeftTrainer2(Seq2SeqTrainer):
     r"""
