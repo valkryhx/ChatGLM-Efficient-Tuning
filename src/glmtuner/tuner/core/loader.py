@@ -95,7 +95,9 @@ def load_model_and_tokenizer(
                 load_in_8bit=True,
                 llm_int8_threshold=6.0
             )
+            
         elif model_args.quantization_bit == 4:
+            logger.info("model_args.quantization_bit == 4 ,load_in_4bit=True ")
             require_version("bitsandbytes>=0.39.0", "To fix: pip install bitsandbytes>=0.39.0")
             require_version("transformers>=4.30.1", "To fix: pip install transformers>=4.30.1")
             require_version("accelerate>=0.20.3", "To fix: pip install accelerate>=0.20.3")
