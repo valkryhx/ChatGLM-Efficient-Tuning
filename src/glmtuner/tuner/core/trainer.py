@@ -13,7 +13,7 @@ from glmtuner.extras.save_and_load import get_state_dict, load_trainable_params,
 from glmtuner.hparams import FinetuningArguments
 import torch.nn as nn
 import deepspeed
-from deepspeed.runtime.utils import clone_tensors_for_torch_save
+#from deepspeed.runtime.utils import clone_tensors_for_torch_save
 logger = get_logger(__name__)
 
 """https://github.com/thomasjpfan/pytorch/blob/e47af44eb81b9cd0c3583de91b0a2d4f56a5cf8d/torch/testing/_internal/common_fsdp.py#L111
@@ -101,24 +101,24 @@ class PeftTrainer(Trainer):
         https://github.com/huggingface/transformers/issues/22822#issuecomment-1514096667
         https://github.com/huggingface/transformers/issues/22822
         """
-        #state_dict = {k: v.clone() for k, v in self.model.state_dict().items()}
+        state_dict = {k: v.clone() for k, v in self.model.state_dict().items()}
         # Zero params, if save/load state_dict did not work properly, this
         # would break the parity test with DDP.
-        #_zero_model(self.model)
+        _zero_model(self.model)
         #print("333X")
-        #self.model.load_state_dict(state_dict)
+        self.model.load_state_dict(state_dict)
         #print("444X")
-        #self.model.save_pretrained(output_dir,max_shard_size="500GB")
+        self.model.save_pretrained(output_dir,max_shard_size="500GB")
         #print("555X  500GGGGB")
-        #torch.save(self.args, os.path.join(output_dir, "training_args.bin"))
+        torch.save(self.args, os.path.join(output_dir, "training_args.bin"))
         print("666X")
-        deepspeed_engine, _, _, _ = deepspeed.initialize(model=self.model, config_params=ds_config)
+        #deepspeed_engine, _, _, _ = deepspeed.initialize(model=self.model, config_params=ds_config)
         #deepspeed_engine.module.save_pretrained("after")
-        print("777X")
-        lean_state_dict = clone_tensors_for_torch_save(deepspeed_engine.module.state_dict())
-        print("888X")
-        deepspeed_engine.module.save_pretrained("lean_after", state_dict=lean_state_dict)
-        print("999X")
+        #print("777X")
+        #lean_state_dict = clone_tensors_for_torch_save(deepspeed_engine.module.state_dict())
+        #print("888X")
+        #deepspeed_engine.module.save_pretrained("lean_after", state_dict=lean_state_dict)
+        #print("999X")
 class PeftTrainer2(Seq2SeqTrainer):
     r"""
     Inherits Seq2SeqTrainer to support parameter-efficient checkpoints.
