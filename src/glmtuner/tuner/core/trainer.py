@@ -11,27 +11,56 @@ from glmtuner.extras.constants import FINETUNING_ARGS_NAME, VALUE_HEAD_FILE_NAME
 from glmtuner.extras.logging import get_logger
 from glmtuner.extras.save_and_load import get_state_dict, load_trainable_params, load_valuehead_params
 from glmtuner.hparams import FinetuningArguments
-
+import torch.nn as nn
 
 logger = get_logger(__name__)
+
+"""https://github.com/thomasjpfan/pytorch/blob/e47af44eb81b9cd0c3583de91b0a2d4f56a5cf8d/torch/testing/_internal/common_fsdp.py#L111
+"""
+def _zero_model(
+    model: nn.Module,
+    zero_buffers: bool = False,
+):
+    """Zeros the parameters and optionally buffers of ``model`` in place."""
+    for param in model.parameters():
+        with torch.no_grad():
+            param.zero_()
+    if zero_buffers:
+        for buffer in model.buffers():
+            with torch.no_grad():
+                buffer.zero_()
 
 
 class PeftTrainer(Trainer):
     def __init__(self, finetuning_args: FinetuningArguments, **kwargs):
-        print("0000000000000089898989000000000000000000000000000000000000000")
+        print("000X")
         super().__init__(**kwargs)
         self.finetuning_args = finetuning_args
         #self._remove_log()
     def save_model(self, output_dir: Optional[str] = None, _internal_call: bool = False):
-        print("89898989000000000000000000000000000000000000000")
+        print("111X")
         """只保存adapter"""
         if output_dir is None:
             output_dir = self.args.output_dir
-        print("111111111111111111111111111110000000000000089898989000000000000000000000000000000000000000")
+        print("222X")
+        """
+        [bug discussion]Size of saved model checkpoints after trainer.train() is much larger when using trainer with deepspeed stage2
+        https://github.com/thomasjpfan/pytorch/blob/e47af44eb81b9cd0c3583de91b0a2d4f56a5cf8d/torch/testing/_internal/common_fsdp.py#L872C1-L872C1
+        https://github.com/microsoft/DeepSpeed/issues/3303
+        https://github.com/huggingface/transformers/issues/22822#issuecomment-1514096667
+        https://github.com/huggingface/transformers/issues/22822
+        """
+        state_dict = {k: v.clone() for k, v in self.model.state_dict().items()}
+        # Zero params, if save/load state_dict did not work properly, this
+        # would break the parity test with DDP.
+         _zero_model(self.model)
+        print("333X")
+        self.model.load_state_dict(state_dict)
+        print("444X")
         self.model.save_pretrained(output_dir)
-        print("222222222222222222222222222220000000000089898989000000000000000000000000000000000000000")
+        print("555X")
         torch.save(self.args, os.path.join(output_dir, "training_args.bin"))
-        print("2222333333333333333333333333333333333300000000089898989000000000000000000000000000000000000000")
+        print("666X")
 
 class PeftTrainer2(Seq2SeqTrainer):
     r"""
