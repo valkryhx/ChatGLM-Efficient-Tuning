@@ -57,7 +57,7 @@ class PeftTrainer(Trainer):
         print("333X")
         self.model.load_state_dict(state_dict)
         print("444X")
-        self.model.save_pretrained(output_dir)
+        self.model.save_pretrained(output_dir,max_shard_size="500GB")
         print("555X")
         #torch.save(self.args, os.path.join(output_dir, "training_args.bin"))
         print("666X")
