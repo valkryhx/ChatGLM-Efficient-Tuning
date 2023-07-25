@@ -12,11 +12,63 @@ from glmtuner.extras.logging import get_logger
 from glmtuner.extras.save_and_load import get_state_dict, load_trainable_params, load_valuehead_params
 from glmtuner.hparams import FinetuningArguments
 import torch.nn as nn
-
+import deepspeed
+from deepspeed.runtime.utils import clone_tensors_for_torch_save
 logger = get_logger(__name__)
 
 """https://github.com/thomasjpfan/pytorch/blob/e47af44eb81b9cd0c3583de91b0a2d4f56a5cf8d/torch/testing/_internal/common_fsdp.py#L111
 """
+ds_config = 
+{
+    "fp16": {
+        "enabled": False, 
+        "loss_scale": 0, 
+        "loss_scale_window": 1000, 
+        "initial_scale_power": 16, 
+        "hysteresis": 2, 
+        "min_loss_scale": 1
+    }, 
+    "bf16": {
+        "enabled": False
+    }, 
+    "optimizer": {
+        "type": "AdamW", 
+        "params": {
+            "lr": 5e-05, 
+            "weight_decay": 0.0
+        }
+    }, 
+    "scheduler": {
+        "type": "WarmupDecayLR", 
+        "params": {
+            "warmup_min_lr": 0, 
+            "warmup_max_lr": 5e-05, 
+            "warmup_num_steps": 260, 
+            "total_num_steps": 2.600000e+03
+        }
+    }, 
+    "zero_optimization": {
+        "stage": 2, 
+        "offload_optimizer": {
+            "device": "none", 
+            "pin_memory": False
+        }, 
+        "overlap_comm": True, 
+        "contiguous_gradients": True, 
+        "sub_group_size": 1.000000e+06, 
+        "reduce_bucket_size": 1.677722e+07, 
+        "stage3_prefetch_bucket_size": 1.509949e+07, 
+        "stage3_param_persistence_threshold": 4.096000e+04, 
+        "stage3_max_live_parameters": 1.000000e+06, 
+        "stage3_max_reuse_distance": 1.000000e+06, 
+        "stage3_gather_16bit_weights_on_model_save": True
+    }, 
+    "train_batch_size": 4, 
+    "train_micro_batch_size_per_gpu": 2, 
+    "gradient_accumulation_steps": 1
+}
+
+
 def _zero_model(
     model: nn.Module,
     zero_buffers: bool = False,
@@ -50,18 +102,24 @@ class PeftTrainer(Trainer):
         https://github.com/huggingface/transformers/issues/22822#issuecomment-1514096667
         https://github.com/huggingface/transformers/issues/22822
         """
-        state_dict = {k: v.clone() for k, v in self.model.state_dict().items()}
+        #state_dict = {k: v.clone() for k, v in self.model.state_dict().items()}
         # Zero params, if save/load state_dict did not work properly, this
         # would break the parity test with DDP.
-        _zero_model(self.model)
-        print("333X")
-        self.model.load_state_dict(state_dict)
-        print("444X")
-        self.model.save_pretrained(output_dir,max_shard_size="500GB")
-        print("555X  500GGGGB")
+        #_zero_model(self.model)
+        #print("333X")
+        #self.model.load_state_dict(state_dict)
+        #print("444X")
+        #self.model.save_pretrained(output_dir,max_shard_size="500GB")
+        #print("555X  500GGGGB")
         #torch.save(self.args, os.path.join(output_dir, "training_args.bin"))
         print("666X")
-
+        deepspeed_engine, _, _, _ = deepspeed.initialize(model=self.model, config_params=ds_config)
+        #deepspeed_engine.module.save_pretrained("after")
+        print("777X")
+        lean_state_dict = clone_tensors_for_torch_save(deepspeed_engine.module.state_dict())
+        print("888X")
+        deepspeed_engine.module.save_pretrained("lean_after", state_dict=lean_state_dict)
+        print("999X")
 class PeftTrainer2(Seq2SeqTrainer):
     r"""
     Inherits Seq2SeqTrainer to support parameter-efficient checkpoints.
