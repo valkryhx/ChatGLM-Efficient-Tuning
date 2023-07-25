@@ -59,7 +59,7 @@ class PeftTrainer(Trainer):
         print("444X")
         self.model.save_pretrained(output_dir)
         print("555X")
-        torch.save(self.args, os.path.join(output_dir, "training_args.bin"))
+        #torch.save(self.args, os.path.join(output_dir, "training_args.bin"))
         print("666X")
 
 class PeftTrainer2(Seq2SeqTrainer):
