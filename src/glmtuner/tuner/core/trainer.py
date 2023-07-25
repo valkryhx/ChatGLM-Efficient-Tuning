@@ -18,8 +18,7 @@ logger = get_logger(__name__)
 
 """https://github.com/thomasjpfan/pytorch/blob/e47af44eb81b9cd0c3583de91b0a2d4f56a5cf8d/torch/testing/_internal/common_fsdp.py#L111
 """
-ds_config = 
-{
+ds_config = {
     "fp16": {
         "enabled": False, 
         "loss_scale": 0, 
