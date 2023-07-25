@@ -18,5 +18,5 @@ fastapi==0.95.1
 sse-starlette
 matplotlib
 loguru==0.7.0
-deepspeed==0.9.5
+deepspeed==0.10.0
 cpm_kernels==1.0.11
