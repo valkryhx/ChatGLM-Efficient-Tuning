@@ -53,7 +53,7 @@ class PeftTrainer(Trainer):
         state_dict = {k: v.clone() for k, v in self.model.state_dict().items()}
         # Zero params, if save/load state_dict did not work properly, this
         # would break the parity test with DDP.
-         _zero_model(self.model)
+        _zero_model(self.model)
         print("333X")
         self.model.load_state_dict(state_dict)
         print("444X")
